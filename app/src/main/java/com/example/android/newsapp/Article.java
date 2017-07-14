@@ -8,8 +8,6 @@ package com.example.android.newsapp;
 // Required fields include the title of the article and the sectionName of the section that it belongs to.
 // Optional fields (if available) : author sectionName , publishDate published
 
-import java.util.Date;
-
 /**
  * webPublicationDate	"2017-04-28T18:29:31Z"
  * webTitle	            "Shameful shutdown of pro…ection debate | Letters"

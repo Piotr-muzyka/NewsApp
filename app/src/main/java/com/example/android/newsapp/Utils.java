@@ -45,7 +45,7 @@ public class Utils {
         // Extract relevant fields from the JSON response and create a list of {@link Earthquake}s
         List<Article> articles = extractFeatureFromJson(jsonResponse);
 
-        // Return the list of {@link Earthquake}s
+        // Return the list of {@link Article}
         return articles;
     }
 
@@ -77,8 +77,8 @@ public class Utils {
         InputStream inputStream = null;
         try {
             urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setReadTimeout(10000 /* milliseconds */);
-            urlConnection.setConnectTimeout(15000 /* milliseconds */);
+            urlConnection.setReadTimeout(10000);
+            urlConnection.setConnectTimeout(15000);
             urlConnection.setRequestMethod("GET");
             urlConnection.connect();
 
@@ -141,8 +141,8 @@ public class Utils {
 
             // Extract the JSONArray associated with the key called "features",
             // which represents a list of features (or earthquakes).
-            Log.v(LOG_TAG, "before if statement" );
-            if(response.has("results")) {
+            Log.v(LOG_TAG, "before if statement");
+            if (response.has("results")) {
                 JSONArray articleArray = response.getJSONArray("results");
 
                 // For each earthquake in the earthquakeArray, create an {@link Earthquake} object
@@ -151,21 +151,21 @@ public class Utils {
                     // Get a single earthquake at position i within the list of earthquakes
                     JSONObject currentArticle = articleArray.getJSONObject(i);
 
-                    Log.v(LOG_TAG, "IN if statement" );
+                    Log.v(LOG_TAG, "IN if statement");
                     // For a given earthquake, extract the JSONObject associated with the
                     // key called "properties", which represents a list of all properties
                     // for that earthquake.
 
-                    // Extract the value for the key called "place"
+                    // Extract the value for the key called "webTitle"
                     String title = currentArticle.getString("webTitle");
                     Log.v(LOG_TAG, "title: " + title);
-                    // Extract the value for the key called "place"
+                    // Extract the value for the key called "sectionName"
                     String sectionName = currentArticle.getString("sectionName");
                     Log.v(LOG_TAG, "section: " + sectionName);
-                    // Extract the value for the key called "time"
+                    // Extract the value for the key called "webPublicationDate"
                     String time = currentArticle.getString("webPublicationDate");
                     Log.v(LOG_TAG, "date: " + time);
-                    // Extract the value for the key called "url"
+                    // Extract the value for the key called "webUrl"
                     String url = currentArticle.getString("webUrl");
                     Log.v(LOG_TAG, "url: " + url);
                     // Create a new {@link Earthquake} object with the magnitude, location, time,
@@ -177,7 +177,7 @@ public class Utils {
                     articles.add(article);
                 }
             }
-            Log.v(LOG_TAG, "after if statement" );
+            Log.v(LOG_TAG, "after if statement");
 
         } catch (JSONException e) {
             // If an error is thrown when executing any of the above statements in the "try" block,

@@ -19,7 +19,7 @@
     <item
         android:id="@+id/action_settings"
         android:title="@string/settings_menu_item"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/ic_settings_input_composite_white_48dp"
         android:orderInCategory="1"
         app:showAsAction="ifRoom" />
 </menu>

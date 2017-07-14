@@ -15,7 +15,7 @@
     <!-- Strings For Minimum Magnitude Preference [CHAR LIMIT=30] -->
     <string name="settings_query_label">Insert keyword :</string>
     <string name="settings_query_key" translatable="false">q</string>
-    <string name="settings_query_default" translatable="false">War</string>
+    <string name="settings_query_default" translatable="false">TEST</string>
 
     <!-- Strings For order by Preference -->
     <string name="settings_order_by_label">Order By</string>

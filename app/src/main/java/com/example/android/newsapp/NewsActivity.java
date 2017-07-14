@@ -24,31 +24,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-//http://content.guardianapis.com/search
+// http://content.guardianapis.com/search
 
 public class NewsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Article>>,
         SharedPreferences.OnSharedPreferenceChangeListener {
     private static final String LOG_TAG = NewsActivity.class.getName();
 
-    /**
-     * URL for earthquake data from the USGS dataset
-     */
+    //URL for News data from the Guardian dataset
     private static final String USGS_REQUEST_URL = "http://content.guardianapis.com/search";
 
-    /**
-     * Constant value for the earthquake loader ID. We can choose any integer.
-     * This really only comes into play if you're using multiple loaders.
-     */
+    // Constant value for the Article loader ID. We can choose any integer.
+    // This really only comes into play if you're using multiple loaders.
     private static final int ARTICLE_LOADER_ID = 1;
+
     private static LoaderManager loaderManager;
     SwipeRefreshLayout swipeRefreshLayout;
-    /**
-     * Adapter for the list of earthquakes
-     */
     private ArticleAdapter mAdapter;
-    /**
-     * TextView that is displayed when the list is empty
-     */
+
+    // TextView that is displayed when the list is empty
     private TextView mEmptyStateTextView;
 
     @Override
@@ -63,7 +56,6 @@ public class NewsActivity extends AppCompatActivity implements LoaderManager.Loa
         mEmptyStateTextView = (TextView) findViewById(R.id.empty_view);
         articleListView.setEmptyView(mEmptyStateTextView);
 
-        // Create a new adapter that takes an empty list of earthquakes as input
         mAdapter = new ArticleAdapter(this, new ArrayList<Article>());
 
         // Get a reference to the ConnectivityManager to check state of network connectivity
@@ -106,19 +98,18 @@ public class NewsActivity extends AppCompatActivity implements LoaderManager.Loa
         // So we know when the user has adjusted the query settings
         prefs.registerOnSharedPreferenceChangeListener(this);
 
-        // Set an item click listener on the ListView, which sends an intent to a web browser
-        // to open a website with more information about the selected earthquake.
+
         articleListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                // Find the current earthquake that was clicked on
+                // Find the current artifcle that was clicked on
                 Article currentEarthquake = mAdapter.getItem(position);
 
                 // Convert the String URL into a URI object (to pass into the Intent constructor)
-                Uri earthquakeUri = Uri.parse(currentEarthquake.getUrl());
+                Uri articleUri = Uri.parse(currentEarthquake.getUrl());
 
-                // Create a new intent to view the earthquake URI
-                Intent websiteIntent = new Intent(Intent.ACTION_VIEW, earthquakeUri);
+                // Create a new intent to view the article URI
+                Intent websiteIntent = new Intent(Intent.ACTION_VIEW, articleUri);
 
                 // Send the intent to launch a new activity
                 startActivity(websiteIntent);
@@ -128,25 +119,23 @@ public class NewsActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-        if (key.equals(getString(R.string.settings_query_key)) ||
-                key.equals(getString(R.string.settings_orderBy_key))) {
-            // Clear the ListView as a new query will be kicked off
+        if (key.equals(getString(R.string.settings_query_key)) || key.equals(getString(R.string.settings_orderBy_key))) {
+            // empty ListView
             mAdapter.clear();
 
-            // Hide the empty state text view as the loading indicator will be displayed
+            // make place for loadingIndicator
             mEmptyStateTextView.setVisibility(View.GONE);
-
-            // Show the loading indicator while new data is being fetched
+            // create loadingIndicator
             View loadingIndicator = findViewById(R.id.loading_indicator);
             loadingIndicator.setVisibility(View.VISIBLE);
-            // Restart the loader to requery the USGS as the query settings have been updated
+            // Restart Loader after settings update
             getLoaderManager().restartLoader(ARTICLE_LOADER_ID, null, this);
         }
     }
 
     @Override
     public Loader<List<Article>> onCreateLoader(int i, Bundle bundle) {
-    // Get an instance of SharedPreferences
+        // Get an instance of SharedPreferences
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         // Get search query preference
@@ -169,18 +158,11 @@ public class NewsActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onLoadFinished(Loader<List<Article>> loader, List<Article> articles) {
-        // Hide loading indicator because the data has been loaded
+
         View loadingIndicator = findViewById(R.id.loading_indicator);
         loadingIndicator.setVisibility(View.GONE);
-
-        // Set empty state text to display "No earthquakes found."
         mEmptyStateTextView.setText(R.string.no_articles);
-
-        // Clear the adapter of previous earthquake data
         mAdapter.clear();
-
-        // If there is a valid list of {@link Earthquake}s, then add them to the adapter's
-        // data set. This will trigger the ListView to update.
         if (articles != null && !articles.isEmpty()) {
             mAdapter.addAll(articles);
         }
@@ -188,7 +170,6 @@ public class NewsActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onLoaderReset(Loader<List<Article>> loader) {
-        // Loader reset, so we can clear out our existing data.
         mAdapter.clear();
     }
 
